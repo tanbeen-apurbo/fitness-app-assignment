@@ -1,5 +1,5 @@
 import Image from 'next/image';
-
+import Link from 'next/link';
 export default function LibraryCard({ library }) {
   const {
     name,
@@ -12,6 +12,7 @@ export default function LibraryCard({ library }) {
   } = library;
 
   return (
+   <Link href={`/library/${library.id}`} >
     <article className="cursor-pointer group w-full overflow-hidden rounded-[14px] border border-[#292b32] bg-[#15161b] transition-[transform,border-color,box-shadow] duration-300 ease-out hover:border-[#46520f] hover:shadow-[0_12px_30px_rgba(0,0,0,0.35)] motion-safe:hover:-translate-y-1 motion-reduce:transition-none">
       <div className="relative aspect-[2.04/1] w-full overflow-hidden">
         <Image
@@ -105,5 +106,6 @@ export default function LibraryCard({ library }) {
         </div>
       </div>
     </article>
+   </Link>
   );
 }

@@ -29,7 +29,7 @@ export default function Navbar() {
           className="col-span-2 row-start-2 flex items-center justify-center md:col-span-1 md:col-start-2 md:row-start-1"
         >
           <Link
-            href="/workouts"
+            href="/library"
             aria-current="page"
             className="rounded-full bg-[#19210e] px-5 py-[9px] text-[15px] font-semibold leading-[18px] text-[#ccff00]"
           >
