@@ -1,21 +1,26 @@
 'use client';
 
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { WorkoutContext } from '../../../context/WorkoutContext';
 import { toast } from 'react-toastify';
 
-const SavedPlanButton = ({ workout }) => {
-  const { setSavedWorkouts } = useContext(WorkoutContext);
+export default function SavedPlanButton({ workout }) {
+  const { savedWorkouts = [], setSavedWorkouts } = useContext(WorkoutContext);
 
-  const handleSavedPlan = () => {
-    if (!workout?.id) return;
+  const alreadySaved =
+    !!workout?.id &&
+    savedWorkouts.some((item) => String(item?.id) === String(workout.id));
+
+  const handleSave = () => {
+    if (!workout?.id || alreadySaved) return;
 
     setSavedWorkouts((current) => {
-      const validWorkouts = Array.isArray(current)
-        ? current.filter((item) => item?.id != null)
-        : [];
+      const list = Array.isArray(current) ? current : [];
+      const duplicate = list.some(
+        (item) => String(item?.id) === String(workout.id)
+      );
 
-      return [...validWorkouts, workout];
+      return duplicate ? list : [...list, workout];
     });
 
     toast.success('Saved workout');
@@ -23,9 +28,10 @@ const SavedPlanButton = ({ workout }) => {
 
   return (
     <button
-      onClick={handleSavedPlan}
       type="button"
-      className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[#303540] px-3 text-[10px] font-medium text-[#d2d4da] transition-colors hover:border-[#626977] hover:bg-[#151820] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ccff00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0e1014] min-[600px]:h-[23px] min-[600px]:gap-1 min-[600px]:px-2.5 min-[600px]:text-[7px] lg:h-11 lg:gap-2 lg:px-6 lg:text-[13px]"
+      onClick={handleSave}
+      disabled={alreadySaved}
+      className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[#303540] px-3 text-[10px] font-medium text-[#d2d4da] transition-colors hover:border-[#626977] hover:bg-[#151820] disabled:cursor-not-allowed disabled:opacity-50 min-[600px]:h-[23px] min-[600px]:gap-1 min-[600px]:px-2.5 min-[600px]:text-[7px] lg:h-11 lg:gap-2 lg:px-6 lg:text-[13px]"
     >
       <svg
         aria-hidden="true"
@@ -40,9 +46,7 @@ const SavedPlanButton = ({ workout }) => {
           strokeLinejoin="round"
         />
       </svg>
-      Save for later
+      {alreadySaved ? 'Saved' : 'Save for later'}
     </button>
   );
-};
-
-export default SavedPlanButton;
+}

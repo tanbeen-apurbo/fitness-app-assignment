@@ -2,8 +2,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import TodaysPlanButton from '../../components/shared/workoutDetails/todaysPlanButton';
 import SavedPlanButton from '../../components/shared/workoutDetails/savedPlanButton';
+import { notFound } from 'next/navigation';
 
 async function getLibraryData() {
+
   const res = await fetch('https://api.abcz.workers.dev/api/fitlog', {
     cache: 'no-store',
   });
@@ -37,22 +39,7 @@ export default async function LibraryDetailsPage({ params }) {
 
   if (!library) {
     return (
-      <main className="min-h-screen bg-[#0e1014] px-4 py-10 text-[#f3f3f4] sm:py-[70px]">
-        <div className="mx-auto max-w-[680px] rounded-2xl border border-[#292b32] bg-[#15161b] p-7 text-center sm:p-10">
-          <h1 className="text-2xl font-bold sm:text-3xl">
-            Workout Not Found
-          </h1>
-          <p className="mt-3 text-sm text-[#9ca1ad]">
-            Sorry, we couldn&apos;t find the workout you&apos;re looking for.
-          </p>
-          <Link
-            href="/library"
-            className="mt-6 inline-flex rounded-lg bg-[#ccff00] px-4 py-2.5 text-sm font-semibold text-[#11120e] transition-colors hover:bg-[#d9ff4d]"
-          >
-            ← Back to library
-          </Link>
-        </div>
-      </main>
+     notFound()
     );
   }
 

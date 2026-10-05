@@ -1,7 +1,9 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { toast } from 'react-toastify';
 
 function ClockIcon() {
   return (
@@ -59,7 +61,25 @@ export default function ListedPlanCard({
   onRemove,
   isDone = false,
 }) {
+  const [completed, setCompleted] = useState(isDone);
+
+  useEffect(() => {
+    setCompleted(isDone);
+  }, [isDone]);
+
   if (!library?.id) return null;
+
+  const handleMarkDone = () => {
+    const nextCompleted = !completed;
+    setCompleted(nextCompleted);
+    onMarkDone?.(library.id, nextCompleted);
+
+    toast.success(
+      nextCompleted
+        ? `${library.name} marked as done`
+        : `${library.name} marked as not done`
+    );
+  };
 
   const rating = Number(library.rating ?? 0).toFixed(1);
 
@@ -78,8 +98,8 @@ export default function ListedPlanCard({
 
         <div className="min-w-0">
           <h3
-            className={`truncate text-[16px] font-bold uppercase leading-5 text-[#f5f5f6] ${
-              isDone ? 'text-[#9298a4] line-through' : ''
+            className={`truncate text-[16px] font-bold uppercase leading-5 ${
+              completed ? 'text-[#9298a4] line-through' : 'text-[#f5f5f6]'
             }`}
             style={{ fontFamily: '"Oswald", "Arial Narrow", Impact, sans-serif' }}
           >
@@ -119,9 +139,10 @@ export default function ListedPlanCard({
 
         <button
           type="button"
-          onClick={() => onMarkDone?.(library.id)}
+          onClick={handleMarkDone}
+          aria-pressed={completed}
           className={`inline-flex h-[34px] items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-4 text-xs font-medium text-[#11120e] transition-colors ${
-            isDone
+            completed
               ? 'bg-[#a8d900] hover:bg-[#baf000]'
               : 'bg-[#ccff00] hover:bg-[#d9ff4d]'
           }`}
@@ -140,7 +161,7 @@ export default function ListedPlanCard({
               strokeLinejoin="round"
             />
           </svg>
-          {isDone ? 'Done' : 'Mark as Done'}
+          {completed ? 'Done' : 'Mark as Done'}
         </button>
 
         <button
